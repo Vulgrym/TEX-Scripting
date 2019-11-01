@@ -1,2 +1,0 @@
-# TEX-Scripting
-PEExt-Scripting
