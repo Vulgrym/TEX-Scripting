@@ -1,0 +1,5 @@
+ssh axissrvnimt1 -> sudo -i -> ssh slz943 -> WS
+
+DI : Modification seuil FS
+axissrvnimt1] /applis/xtechn/put/REFFAB/par
+$ cat ut.z.thresholdListFs.txt
