@@ -1,0 +1,61 @@
+#############################################
+###                                       ###
+###             FILESYSTEM                ###
+###                                       ###
+#############################################
+
+ANALYSE :
+        sudo du -sm ./* | sort -nr | head -10
+        (test -xgs pour aix)
+
+        find /[FS]/* -type f -mtime +[TIME] -name "*" -exec ls -lrt {} \;
+
+
+
+
+TRAITEMENT :
+        ls -lrt | grep "[.FICHIER]" | grep "[DATE]" | awk '{print $9}' | xargs -ti gzip -v -9 {} ;
+
+        AIX :
+                df -g
+                /dev/5p2jh_o2di00   [...]
+
+                lslv 5p2jh_o2di00
+                lsvg [VOLUMEGROUP]
+
+                chfs -a size=+2G [FS]
+                chlv -x 4100 uzkap_d01
+
+
+
+
+SURVEILLANCE :
+        while true ; do sleep 2 ; clear ; df -gP [FS] ; done
+
+
+
+
+ANNEXE :
+        http://preprod.sii24.pole-emploi.intra/wiki/index.php/Utiliser_un_VG_RESERVE_pour_etendre_un_autre_VG
+
+        AIX :
+                lsvg | grep reser
+                xxx_reser200M  <= Contient 1 ou plusieurs disques de 200M
+                xxx_reser200G <= Contient 1 ou plusieurs disques de 200G
+                xxx_reser2G <= Contient 1 ou plusieurs disques de 2G
+                xxx_reservclo  <= NE PAS UTILISER CE VG (reservÃ© au CLOD)
+
+                VÃ©rifier que le VG peut Ãªtre Ã©te
+                lsvg [VG]
+                Il faut que ACTIVE PVs < MAX PVs
+
+                sudo reducevg  [5p2jh_reser200G] [hdisk377]
+                lspv | grep [hdisk377]
+                extendvg <VG> <disque>
+
+                lspv | grep hdisk377
+                        hdisk377        00c412b7383836f3                    5p2jh_orac_db01 active
+
+
+#############################################
+
