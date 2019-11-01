@@ -1,0 +1,30 @@
+#!/bin/bash
+################################
+# DEFINITION DES VARIABLES
+SRV_PUBKEY_OK="$HOME/.ssh/SRV_pubkey_OK"
+AUTHORIZED_KEYS="$HOME/.ssh/authorized_keys"
+################################
+# CLEAR
+clear
+################################
+# VERIF ETAT DE LA MACHINE CIBLE
+ping $1 -c1 &>>/dev/null
+if [ $? == 0 ] ; then
+                echo -e "\e[0;32mLa machine \"$1\" semble accessible.\e[m"
+        else
+                echo -e "\e[0;31mLa machine \"$1\" semble inaccessible.\e[m" && exit 1
+fi
+################################
+# VERIF SI CLE PUB DEJA ENVOYEE
+grep -i "$1" $SRV_PUBKEY_OK >>/dev/null
+################################
+# ENVOI DE LA CLE OU CONNEXION
+if [ $? == 0 ] ; then
+        echo -e "\e[0;32mLa cle publique est deja sur la machine \"$1\".\e[m"
+        ssh $1
+else
+        echo -e "\e[0;31mLa cle publique n'est pas sur la machine \"$1\".\e[m"
+        echo "$1" >> $SRV_PUBKEY_OK
+        ssh-copy-id -f $1 &>>/dev/null
+        ssh $1
+fi
